@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command, HelpCommand, ImportCommand, VersionCommand } from './commands/index.js';
 import { CLIApp } from './cli-app.js';
 

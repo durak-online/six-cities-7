@@ -1,4 +1,5 @@
 import { Command } from './command.interface.js';
+import chalk from 'chalk';
 
 export class HelpCommand implements Command {
   private commands: Command[] = [];
@@ -19,12 +20,13 @@ export class HelpCommand implements Command {
     const commandsList = this.formatCommands();
 
     console.info(`
-Программа для подготовки данных для REST API сервера.
+${chalk.bold('Программа для подготовки данных для REST API сервера.')}
 
-Пример: main.cli.js --<command> [arguments]
+Пример: ${chalk.cyan('main.cli.js --<command> [arguments]')}
 
-Команды:
-${commandsList}`);
+${chalk.bold('Команды:')}
+${commandsList}
+  `);
   }
 
   public registerCommands(commands: Command[]): void {
@@ -38,7 +40,7 @@ ${commandsList}`);
     );
 
     if (this.commands.length === 0) {
-      return '    (команды не зарегистрированы)';
+      return chalk.gray('    (команды не зарегистрированы)');
     }
 
     return this.commands
@@ -46,7 +48,7 @@ ${commandsList}`);
         const usage = command.getUsage().padEnd(maxNameLength);
         const description = command.getDescription();
 
-        return `${usage}  # ${description}`;
+        return `${chalk.cyan(usage)}  ${chalk.gray(`# ${description}`)}`;
       })
       .join('\n');
   }
