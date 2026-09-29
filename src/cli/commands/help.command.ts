@@ -11,6 +11,10 @@ export class HelpCommand implements Command {
     return 'Печатает текст подсказки';
   }
 
+  public getUsage(): string {
+    return `--${this.getName()}`;
+  }
+
   public execute(..._params: string[]): void {
     const commandsList = this.formatCommands();
 
@@ -29,7 +33,7 @@ ${commandsList}`);
 
   private formatCommands(): string {
     const maxNameLength = this.commands.reduce(
-      (max, command) => Math.max(max, command.getName().length),
+      (max, command) => Math.max(max, command.getUsage().length),
       0,
     );
 
@@ -39,10 +43,10 @@ ${commandsList}`);
 
     return this.commands
       .map((command) => {
-        const name = command.getName().padEnd(maxNameLength);
+        const usage = command.getUsage().padEnd(maxNameLength);
         const description = command.getDescription();
 
-        return `--${name}  # ${description}`;
+        return `${usage}  # ${description}`;
       })
       .join('\n');
   }

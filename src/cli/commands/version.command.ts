@@ -29,6 +29,10 @@ export class VersionCommand implements Command {
     return 'Выводит версию';
   }
 
+  public getUsage(): string {
+    return `--${this.getName()}`;
+  }
+
   public async execute(..._params: string[]): Promise<void> {
     try {
       const version = this.readVersion();

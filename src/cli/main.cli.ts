@@ -1,12 +1,11 @@
-import { HelpCommand } from './commands/help.command.js';
-import { VersionCommand } from './commands/version.command.js';
-import { Command } from './commands/command.interface.js';
+import { Command, HelpCommand, ImportCommand, VersionCommand } from './commands/index.js';
 import { CLIApp } from './cli-app.js';
 
 const helpCommand = new HelpCommand();
 const commands: Command[] = [
   helpCommand,
   new VersionCommand(),
+  new ImportCommand(),
 ];
 
 helpCommand.registerCommands(commands);
