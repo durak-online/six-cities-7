@@ -39,10 +39,10 @@ export class VersionCommand implements Command {
       const version = this.readVersion();
       console.info(chalk.blue(version));
     } catch (error: unknown) {
-      console.error(`Failed to read version from ${this.filePath}`);
+      console.info(chalk.red(`Failed to read version from ${this.filePath}`));
 
       if (error instanceof Error) {
-        console.error(error.message);
+        console.info(chalk.red(error.message));
       }
     }
   }

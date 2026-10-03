@@ -1,3 +1,3 @@
-export interface FileReader<T> {
-  readFile(path: string) : T;
+export interface FileReader {
+  read(path: string) : void;
 }
