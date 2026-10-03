@@ -1,0 +1,82 @@
+{
+  "api": {
+    "titles": [
+      "Уютная студия в центре города",
+      "Просторная квартира с видом на парк",
+      "Современный лофт в историческом здании",
+      "Тихий дом в пригороде с садом",
+      "Апартаменты рядом с главными достопримечательностями",
+      "Комфортабельный номер в бутик-отеле",
+      "Светлая комната в тихом районе"
+    ],
+    "descriptions": [
+      "Идеальный вариант для путешественников, которые хотят быть в центре событий и при этом отдыхать в тишине.",
+      "Светлое просторное жильё со свежим ремонтом, всей необходимой техникой и удобной транспортной доступностью.",
+      "Остановитесь в самом сердце города и наслаждайтесь атмосферой старинных улиц и современных кафе.",
+      "Тихий район с развитой инфраструктурой, парками и магазинами в шаговой доступности.",
+      "Просторное жильё для большой компании или семьи с детьми, есть всё для долгосрочного проживания.",
+      "Стильный интерьер, панорамные окна и продуманные детали создают ощущение дома с первого взгляда.",
+      "Отличный выбор для командировок: рабочее место, быстрый интернет и удобное расположение рядом с деловым центром."
+    ],
+    "previewUrls": [
+      "img/preview-1.jpg",
+      "img/preview-2.jpg",
+      "img/preview-3.jpg",
+      "img/preview-4.jpg",
+      "img/preview-5.jpg",
+      "img/preview-6.jpg",
+      "img/preview-7.jpg"
+    ],
+    "photoUrls": [
+      "img/photo-1.jpg",
+      "img/photo-2.jpg",
+      "img/photo-3.jpg",
+      "img/photo-4.jpg",
+      "img/photo-5.jpg",
+      "img/photo-6.jpg",
+      "img/photo-7.jpg",
+      "img/photo-8.jpg",
+      "img/photo-9.jpg",
+      "img/photo-10.jpg",
+      "img/photo-11.jpg",
+      "img/photo-12.jpg"
+    ],
+    "users": [
+      {
+        "name": "Алиса",
+        "email": "alice@example.com",
+        "photoUrl": "img/avatars/alice.jpg",
+        "password": "secret123",
+        "type": "common"
+      },
+      {
+        "name": "Борис",
+        "email": "boris@example.com",
+        "photoUrl": "img/avatars/boris.jpg",
+        "password": "secret123",
+        "type": "pro"
+      },
+      {
+        "name": "Виктория",
+        "email": "victoria@example.com",
+        "photoUrl": "img/avatars/victoria.jpg",
+        "password": "secret123",
+        "type": "common"
+      },
+      {
+        "name": "Григорий",
+        "email": "grigory@example.com",
+        "photoUrl": "img/avatars/grigory.jpg",
+        "password": "secret123",
+        "type": "pro"
+      },
+      {
+        "name": "Дарья",
+        "email": "daria@example.com",
+        "photoUrl": "img/avatars/daria.jpg",
+        "password": "secret123",
+        "type": "common"
+      }
+    ]
+  }
+}

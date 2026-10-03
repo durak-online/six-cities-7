@@ -31,12 +31,12 @@ export class CLIApp {
     return this.commands[this.defaultCommand];
   }
 
-  public processCommand(argv: string[]): void {
+  public async processCommand(argv: string[]): Promise<void> {
     const parsed = CommandParser.parse(argv);
     const [rawName] = Object.keys(parsed);
     const commandName = rawName?.replace(/^--/, '');
 
     const command = this.getCommand(commandName);
-    command.execute(...(parsed[rawName] ?? []));
+    await command.execute(...(parsed[rawName] ?? []));
   }
 }

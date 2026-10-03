@@ -6,3 +6,4 @@ export * from './city.type.js';
 export * from './housing-type.type.js';
 export * from './comment.type.js';
 export * from './location.type.js';
+export * from './mock-server-data.type.js';
