@@ -1,9 +1,9 @@
-import { UserType } from './user-type.type.js';
+import { TUserType } from './user-type.type.js';
 
-export type User = {
+export type TUser = {
   name: string;
   email: string;
   photoUrl: string;
   password: string;
-  type: UserType;
+  type: TUserType;
 }

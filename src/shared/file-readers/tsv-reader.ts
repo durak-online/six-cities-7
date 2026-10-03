@@ -1,8 +1,8 @@
 import { IFileReader } from './file-reader.interface.js';
 import {
-  RentalOffer,
-  Convenience,
-  Location,
+  TRentalOffer,
+  TConvenience,
+  TLocation,
   asCity,
   asConvenience,
   asHousingType,
@@ -26,8 +26,8 @@ import {
   TSV_LIST_SEPARATOR,
 } from '../../constants/index.js';
 
-export class TSVReader implements IFileReader<RentalOffer> {
-  public async *read(path: string): AsyncGenerator<RentalOffer> {
+export class TSVReader implements IFileReader<TRentalOffer> {
+  public async *read(path: string): AsyncGenerator<TRentalOffer> {
     for await (const rawLine of readLines(path)) {
       const line = rawLine.trim();
 
@@ -43,7 +43,7 @@ export class TSVReader implements IFileReader<RentalOffer> {
     }
   }
 
-  private parseLine(line: string): RentalOffer | null {
+  private parseLine(line: string): TRentalOffer | null {
     const parts = line.split('\t');
 
     if (parts.length !== TSV_COLUMNS_COUNT) {
@@ -99,13 +99,13 @@ export class TSVReader implements IFileReader<RentalOffer> {
     return photos;
   }
 
-  private parseConveniences(raw: string): Convenience[] {
+  private parseConveniences(raw: string): TConvenience[] {
     return raw
       .split(TSV_LIST_SEPARATOR)
       .map((item) => asConvenience(item.trim()));
   }
 
-  private parseLocation(raw: string): Location {
+  private parseLocation(raw: string): TLocation {
     const [latitudeRaw, longitudeRaw] = raw.split(TSV_LIST_SEPARATOR);
 
     if (!latitudeRaw || !longitudeRaw) {

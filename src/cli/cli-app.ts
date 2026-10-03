@@ -1,7 +1,7 @@
-import { Command } from './commands/index.js';
+import { ICommand } from './commands/index.js';
 import { CommandParser } from './command-parser.js';
 
-type CommandCollection = Record<string, Command>;
+type CommandCollection = Record<string, ICommand>;
 
 export class CLIApp {
   private commands: CommandCollection = {};
@@ -11,7 +11,7 @@ export class CLIApp {
   ) {
   }
 
-  public registerCommands(commands: Command[]): void {
+  public registerCommands(commands: ICommand[]): void {
     commands.forEach((command) => {
       if (Object.hasOwn(this.commands, command.getName())) {
         throw new Error(`Command ${command.getName()} is already registered`);
@@ -20,11 +20,11 @@ export class CLIApp {
     });
   }
 
-  public getCommand(commandName: string): Command {
+  public getCommand(commandName: string): ICommand {
     return this.commands[commandName] ?? this.getDefaultCommand();
   }
 
-  public getDefaultCommand(): Command | never {
+  public getDefaultCommand(): ICommand | never {
     if (!this.commands[this.defaultCommand]) {
       throw new Error(`The default command (${this.defaultCommand}) is not registered.`);
     }

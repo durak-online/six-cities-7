@@ -1,8 +1,8 @@
-import { Command } from './command.interface.js';
+import { ICommand } from './command.interface.js';
 import chalk from 'chalk';
 
-export class HelpCommand implements Command {
-  private commands: Command[] = [];
+export class HelpCommand implements ICommand {
+  private commands: ICommand[] = [];
 
   public getName(): string {
     return 'help';
@@ -29,7 +29,7 @@ ${commandsList}
   `);
   }
 
-  public registerCommands(commands: Command[]): void {
+  public registerCommands(commands: ICommand[]): void {
     this.commands = commands;
   }
 

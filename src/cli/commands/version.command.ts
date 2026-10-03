@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { Command } from './command.interface.js';
+import { ICommand } from './command.interface.js';
 import chalk from 'chalk';
 
 type PackageJSONConfig = {
@@ -16,7 +16,7 @@ function isPackageJSONConfig(value: unknown): value is PackageJSONConfig {
   );
 }
 
-export class VersionCommand implements Command {
+export class VersionCommand implements ICommand {
   constructor(
     private readonly filePath: string = './package.json'
   ) {

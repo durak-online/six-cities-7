@@ -1,12 +1,12 @@
 import { existsSync, statSync } from 'node:fs';
 import { extname } from 'node:path';
-import { Command } from './command.interface.js';
+import { ICommand } from './command.interface.js';
 import { TSVReader } from '../../shared/file-readers/tsv-reader.js';
 import chalk from 'chalk';
 
 const REQUIRED_EXTENSION = '.tsv';
 
-export class ImportCommand implements Command {
+export class ImportCommand implements ICommand {
   private readonly reader = new TSVReader();
 
   public getName(): string {

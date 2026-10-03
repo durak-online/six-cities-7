@@ -1,14 +1,14 @@
-import { Command } from './command.interface.js';
+import { ICommand } from './command.interface.js';
 import { OfferGenerator } from '../../shared/generators/offer.generator.js';
 import { TSVWriter } from '../../shared/file-writers/tsv-writer.js';
 import { fetchJson, asIntInRange } from '../../shared/utils/index.js';
-import { MockServerData } from '../../types/index.js';
+import { TMockServerData } from '../../types/index.js';
 import chalk from 'chalk';
 
 const MIN_COUNT = 1;
 const MAX_COUNT = 100_000;
 
-export class GenerateCommand implements Command {
+export class GenerateCommand implements ICommand {
   public getName(): string {
     return 'generate';
   }
@@ -54,11 +54,11 @@ export class GenerateCommand implements Command {
     console.info(chalk.green(`Данные записаны в "${filePath}"`));
   }
 
-  private async loadMockData(url: string): Promise<MockServerData> {
+  private async loadMockData(url: string): Promise<TMockServerData> {
     console.info(`Загружаем данные с ${url}...`);
 
     try {
-      return await fetchJson<MockServerData>(url);
+      return await fetchJson<TMockServerData>(url);
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);
       throw new Error(`Не удалось получить данные с ${url}: ${reason}`);

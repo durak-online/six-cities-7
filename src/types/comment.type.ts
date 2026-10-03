@@ -1,8 +1,8 @@
-import { User } from './user.type.js';
+import { TUser } from './user.type.js';
 
-export type Comment = {
+export type TComment = {
   text: string;
   publishDate: Date;
   rating: number;
-  author: User
+  author: TUser
 }

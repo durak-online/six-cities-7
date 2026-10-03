@@ -1,16 +1,16 @@
 import { createWriteStream, WriteStream } from 'node:fs';
-import { RentalOffer } from '../../types/index.js';
+import { TRentalOffer } from '../../types/index.js';
 import { TSV_LIST_SEPARATOR } from '../../constants/index.js';
 import { IFileWriter } from './file-writer.interface.js';
 
-export class TSVWriter implements IFileWriter<RentalOffer> {
+export class TSVWriter implements IFileWriter<TRentalOffer> {
   private readonly stream: WriteStream;
 
   constructor(path: string) {
     this.stream = createWriteStream(path, { encoding: 'utf-8' });
   }
 
-  public async write(offer: RentalOffer): Promise<void> {
+  public async write(offer: TRentalOffer): Promise<void> {
     const line = `${this.serialize(offer)}\n`;
 
     if (!this.stream.write(line)) {
@@ -24,7 +24,7 @@ export class TSVWriter implements IFileWriter<RentalOffer> {
     });
   }
 
-  private serialize(offer: RentalOffer): string {
+  private serialize(offer: TRentalOffer): string {
     return [
       offer.title,
       offer.description,

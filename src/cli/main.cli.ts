@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { Command, GenerateCommand, HelpCommand, ImportCommand, VersionCommand } from './commands/index.js';
+import { ICommand, GenerateCommand, HelpCommand, ImportCommand, VersionCommand } from './commands/index.js';
 import { CLIApp } from './cli-app.js';
 
 const helpCommand = new HelpCommand();
-const commands: Command[] = [
+const commands: ICommand[] = [
   helpCommand,
   new VersionCommand(),
   new ImportCommand(),

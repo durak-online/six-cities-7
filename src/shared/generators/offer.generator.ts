@@ -1,7 +1,7 @@
 import {
-  MockServerData,
-  City,
-  Convenience,
+  TMockServerData,
+  TCity,
+  TConvenience,
   asUserType,
   asHousingType,
 } from '../../types/index.js';
@@ -28,9 +28,9 @@ import {
 import { IGenerator } from './generator.interface.js';
 
 export class OfferGenerator implements IGenerator {
-  private readonly cities: City[] = Object.keys(CITY_LOCATIONS) as City[];
+  private readonly cities: TCity[] = Object.keys(CITY_LOCATIONS) as TCity[];
 
-  constructor(private readonly data: MockServerData) {
+  constructor(private readonly data: TMockServerData) {
   }
 
   public generate<RentalOffer>(): RentalOffer {
@@ -54,7 +54,7 @@ export class OfferGenerator implements IGenerator {
       conveniences: pickRandomManyUnique(
         CONVENIENCES,
         randomInt(1, CONVENIENCES.length),
-      ) as Convenience[],
+      ) as TConvenience[],
       author: {
         ...author,
         type: asUserType(author.type),

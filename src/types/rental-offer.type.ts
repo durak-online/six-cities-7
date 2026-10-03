@@ -1,25 +1,25 @@
-import { City } from './city.type.js';
-import { HousingType } from './housing-type.type.js';
-import { Convenience } from './convenience.type.js';
-import { User } from './user.type.js';
-import { Location } from './location.type.js';
+import { TCity } from './city.type.js';
+import { THousingType } from './housing-type.type.js';
+import { TConvenience } from './convenience.type.js';
+import { TUser } from './user.type.js';
+import { TLocation } from './location.type.js';
 
-export type RentalOffer = {
+export type TRentalOffer = {
   title: string;
   description: string;
   publishDate: Date;
-  city: City;
+  city: TCity;
   previewUrl: string;
   photoUrls: string[];
   isPremium: boolean;
   isFavorite: boolean;
   rating: number;
-  housingType: HousingType;
+  housingType: THousingType;
   roomsCount: number;
   guestsCount: number;
   price: number
-  conveniences: Convenience[];
-  author: User;
+  conveniences: TConvenience[];
+  author: TUser;
   commentsCount: number;
-  location: Location;
+  location: TLocation;
 }
