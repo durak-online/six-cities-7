@@ -1,5 +1,4 @@
-import { FileReader } from './file-reader.interface.js';
-import { readFileSync } from 'node:fs';
+import { IFileReader } from './file-reader.interface.js';
 import {
   RentalOffer,
   Convenience,
@@ -13,7 +12,7 @@ import {
   asDate,
   asFloatInRange,
   asIntInRange,
-  asStringInLenRange,
+  asStringInLenRange, readLines,
 } from '../utils/index.js';
 import {
   TITLE_LENGTH,
@@ -27,28 +26,21 @@ import {
   TSV_LIST_SEPARATOR,
 } from '../../constants/index.js';
 
-export class TSVReader implements FileReader {
-  private rawData = '';
+export class TSVReader implements IFileReader<RentalOffer> {
+  public async *read(path: string): AsyncGenerator<RentalOffer> {
+    for await (const rawLine of readLines(path)) {
+      const line = rawLine.trim();
 
-  public read(path: string) {
-    this.rawData = this.readRawData(path);
-  }
+      if (line.length === 0) {
+        continue;
+      }
 
-  public toArray(): RentalOffer[] {
-    return this.parseRawData();
-  }
+      const offer = this.parseLine(line);
 
-  private readRawData(path: string): string {
-    return readFileSync(path, { encoding: 'utf-8' });
-  }
-
-  private parseRawData(): RentalOffer[] {
-    return this.rawData
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0)
-      .map((line) => this.parseLine(line))
-      .filter((offer): offer is RentalOffer => offer !== null);
+      if (offer !== null) {
+        yield offer;
+      }
+    }
   }
 
   private parseLine(line: string): RentalOffer | null {

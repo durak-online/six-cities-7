@@ -21,15 +21,16 @@ export class ImportCommand implements Command {
     return `--${this.getName()} <path>`;
   }
 
-  public execute(...params: string[]): void {
+  public async execute(...params: string[]): Promise<void> {
     const [filename] = params;
+    let total = 0;
 
     try {
       this.validateFile(filename);
-      this.reader.read(filename);
-      const offers = this.reader.toArray();
-
-      console.info(`Импортировано ${offers.length} предложений из "${filename}"`);
+      for await (const offer of this.reader.read(filename)) {
+        total++;
+        console.info(`${offer.title} - ${offer.city}, ${offer.price} руб.`);
+      }
     } catch (err) {
       if (!(err instanceof Error)) {
         throw err;
@@ -38,6 +39,8 @@ export class ImportCommand implements Command {
       console.info(chalk.red(`Не удалось импортировать данные из файла: ${filename ?? '(путь не указан)'}`));
       console.info(chalk.red(`Причина: ${err.message}`));
     }
+
+    console.info(chalk.green(`Всего ${total}`));
   }
 
   private validateFile(filename: string | undefined): asserts filename is string {
