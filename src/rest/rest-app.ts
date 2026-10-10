@@ -9,6 +9,7 @@ export class RestApp {
     @inject(Component.ILogger) private readonly logger: ILogger,
     @inject(Component.IConfig) private readonly config: IConfig<RestSchema>,
   ) {
+    this.logger = logger.child(this.constructor.name);
   }
 
   public async init() {

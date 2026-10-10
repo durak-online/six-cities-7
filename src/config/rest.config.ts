@@ -12,6 +12,7 @@ export class RestConfig implements IConfig<RestSchema> {
   constructor(
     @inject(Component.ILogger) private readonly logger: ILogger
   ) {
+    this.logger = logger.child(this.constructor.name);
     const parsedOutput = config();
 
     if (parsedOutput.error) {
