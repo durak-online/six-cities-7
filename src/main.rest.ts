@@ -1,9 +1,26 @@
-import { App } from './rest/app.js';
-import { PinoLogger } from './shared/logging/index.js';
-import { RestConfig } from './config/index.js';
+import 'reflect-metadata';
+import { RestApp } from './rest/rest-app.js';
+import { ILogger, PinoLogger } from './shared/logging/index.js';
+import { IConfig, RestConfig, RestSchema } from './config/index.js';
+import { Container } from 'inversify';
+import { Component } from './types/index.js';
 
-const logger = new PinoLogger();
-const config = new RestConfig(logger);
-const app = new App(logger, config);
+const container = new Container();
 
-await app.init();
+container
+  .bind<RestApp>(Component.RestApp)
+  .to(RestApp)
+  .inSingletonScope();
+
+container
+  .bind<ILogger>(Component.ILogger)
+  .to(PinoLogger)
+  .inSingletonScope();
+
+container
+  .bind<IConfig<RestSchema>>(Component.IConfig)
+  .to(RestConfig)
+  .inSingletonScope();
+
+const application = container.get<RestApp>(Component.RestApp);
+await application.init();

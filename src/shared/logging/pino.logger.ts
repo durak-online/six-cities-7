@@ -2,7 +2,9 @@ import { ILogger } from './logger.interface.js';
 import { Logger as PinoInstance, pino, transport } from 'pino';
 import { dirname, resolve } from 'node:path';
 import { mkdirSync } from 'node:fs';
+import { injectable } from 'inversify';
 
+@injectable()
 export class PinoLogger implements ILogger {
   private readonly logger: PinoInstance;
 
