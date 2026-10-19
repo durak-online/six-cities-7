@@ -1,8 +1,9 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 import { TRentalOffer } from '../../types/index.js';
 import { CITY_LOCATIONS, CONVENIENCES, HOUSING_TYPES } from '../../constants/index.js';
 
-export interface RentalOfferDocument extends TRentalOffer, Document {
+export interface RentalOfferDocument extends Omit<TRentalOffer, 'author'>, Document {
+  author: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
