@@ -4,3 +4,4 @@ export * from './random.util.js';
 export * from './http.util.js';
 export * from './read-lines.util.js';
 export * from './mongo-uri.util.js';
+export * from './hash.util.js';
