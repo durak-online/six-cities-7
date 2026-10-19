@@ -11,20 +11,20 @@ const RETRY_TIMEOUT_MS = 1000;
 @injectable()
 export class MongoDatabaseClient implements IDatabaseClient {
   private mongoose!: typeof Mongoose;
-  private isConnected: boolean;
+  private _isConnected: boolean;
 
   constructor(
     @inject(Component.ILogger) private readonly logger: ILogger
   ) {
-    this.isConnected = false;
+    this._isConnected = false;
   }
 
-  public isConnectedToDatabase() {
-    return this.isConnected;
+  public isConnected() {
+    return this._isConnected;
   }
 
   public async connect(uri: string): Promise<void> {
-    if (this.isConnectedToDatabase()) {
+    if (this._isConnected) {
       throw new Error('MongoDB client already connected');
     }
 
@@ -34,7 +34,7 @@ export class MongoDatabaseClient implements IDatabaseClient {
     while (attempt < RETRY_COUNT) {
       try {
         this.mongoose = await Mongoose.connect(uri);
-        this.isConnected = true;
+        this._isConnected = true;
         this.logger.info('Database connection established.');
         return;
       } catch (error) {
@@ -48,12 +48,12 @@ export class MongoDatabaseClient implements IDatabaseClient {
   }
 
   public async disconnect(): Promise<void> {
-    if (!this.isConnectedToDatabase()) {
+    if (!this._isConnected) {
       throw new Error('Not connected to the database');
     }
 
     await this.mongoose.disconnect?.();
-    this.isConnected = false;
+    this._isConnected = false;
     this.logger.info('Database connection closed.');
   }
 }

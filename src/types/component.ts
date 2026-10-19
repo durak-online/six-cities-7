@@ -7,4 +7,7 @@ export const Component = {
   UserModel: Symbol.for('UserModel'),
   IOfferService: Symbol.for('IOfferService'),
   OfferModel: Symbol.for('OfferModel'),
+  IFileReader: Symbol.for('IFileReader'),
+
+  ImportCommand: Symbol.for('ImportCommand'),
 } as const;

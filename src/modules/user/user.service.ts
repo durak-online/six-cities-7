@@ -34,8 +34,17 @@ export class UserService implements IUserService {
     return this.userModel.findById(id).exec();
   }
 
-  // Поиск по Email
   public async findByEmail(email: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ email }).exec();
+  }
+
+  public async findOrCreate(dto: CreateUserDto, salt: string): Promise<UserDocument> {
+    const existedUser = await this.findByEmail(dto.email);
+
+    if (existedUser) {
+      return existedUser;
+    }
+
+    return this.create(dto, salt);
   }
 }
