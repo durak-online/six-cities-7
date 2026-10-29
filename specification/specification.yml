@@ -1,0 +1,553 @@
+openapi: 3.1.0
+info:
+  title: "Six Cities API"
+  description: "API для 'Шесть городов'"
+  version: "1.0.0"
+
+tags:
+  - name: offers
+    description: Предложения по аренде
+  - name: comments
+    description: Комментарии к предложениям
+  - name: users
+    description: Пользователи и авторизация
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "507f1f77bcf86cd799439011"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 15
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        avatarPath:
+          type: string
+          default: "/img/avatars/avatar-default.png"
+          example: "/img/avatars/avatar.jpg"
+        userType:
+          type: string
+          enum: [ common, pro ]
+          example: "common"
+
+    createUserDto:
+      type: object
+      required: [ name, email, password, userType ]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 15
+        email:
+          type: string
+          format: email
+        photoUrl:
+          type: string
+          example: "/img/avatars/john.jpg"
+        password:
+          type: string
+          minLength: 6
+          maxLength: 12
+        userType:
+          type: string
+          enum: [ common, pro ]
+
+    location:
+      type: object
+      required: [ latitude, longitude ]
+      properties:
+        latitude:
+          type: number
+          example: 48.85661
+        longitude:
+          type: number
+          example: 2.351499
+
+    offer:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "60d0fe4f5311236168a109ca"
+        title:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        publishDate:
+          type: string
+          format: date-time
+        city:
+          type: string
+          enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
+        previewUrl:
+          type: string
+        photoUrls:
+          type: array
+          items:
+            type: string
+          minItems: 6
+          maxItems: 6
+        isPremium:
+          type: boolean
+        isFavorite:
+          type: boolean
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        housingType:
+          type: string
+          enum: [ apartment, house, room, hotel ]
+        roomsCount:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guestsCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+        price:
+          type: integer
+          minimum: 100
+          maximum: 100000
+        amenities:
+          type: array
+          items:
+            type: string
+            enum: [ Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge ]
+        author:
+          $ref: '#/components/schemas/user'
+        commentsCount:
+          type: integer
+          example: 0
+        location:
+          $ref: '#/components/schemas/location'
+
+      createOfferDto:
+        type: object
+        required: [ title, description, city, previewUrl, photoUrls, isPremium, housingType, roomsCount, guestsCount, price, amenities, location ]
+        properties:
+          title:
+            type: string
+            minLength: 10
+            maxLength: 100
+          description:
+            type: string
+            minLength: 20
+            maxLength: 1024
+          city:
+            type: string
+            enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
+          previewUrl:
+            type: string
+          photoUrls:
+            type: array
+            items:
+              type: string
+            minItems: 6
+            maxItems: 6
+          isPremium:
+            type: boolean
+          housingType:
+            type: string
+            enum: [ apartment, house, room, hotel ]
+          roomsCount:
+            type: integer
+            minimum: 1
+            maximum: 8
+          guestsCount:
+            type: integer
+            minimum: 1
+            maximum: 10
+          price:
+            type: integer
+            minimum: 100
+            maximum: 100000
+          amenities:
+            type: array
+            items:
+              type: string
+              enum: [ Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge ]
+          location:
+            $ref: '#/components/schemas/location'
+    createOfferDto:
+      type: object
+      required: [ title, description, city, previewUrl, photoUrls, isPremium, housingType, roomsCount, guestsCount, price, amenities, location ]
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        city:
+          type: string
+          enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
+        previewUrl:
+          type: string
+        photoUrls:
+          type: array
+          items:
+            type: string
+          minItems: 6
+          maxItems: 6
+        isPremium:
+          type: boolean
+        housingType:
+          type: string
+          enum: [ apartment, house, room, hotel ]
+        roomsCount:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guestsCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+        price:
+          type: integer
+          minimum: 100
+          maximum: 100000
+        amenities:
+          type: array
+          items:
+            type: string
+            enum: [ Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge ]
+        location:
+          $ref: '#/components/schemas/location'
+
+    comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        publishDate:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        author:
+          $ref: '#/components/schemas/user'
+
+    createCommentDto:
+      type: object
+      required: [ text, rating ]
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+
+paths:
+  /offers:
+    # 5.4 Получение предложений
+    get:
+      tags: [ offers ]
+      summary: Получение списка предложений
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 60
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+    # 5.1 Создание предложения
+    post:
+      tags: [ offers ]
+      summary: Создание нового предложения
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOfferDto'
+      responses:
+        '201':
+          description: Предложение создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Невалидные данные
+        '401':
+          description: Не авторизован
+
+  /offers/{offerId}:
+    # 5.5 Детальная информация
+    get:
+      tags: [ offers ]
+      summary: Детальная информация по предложению
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+    # 5.2 Редактирование
+    patch:
+      tags: [ offers ]
+      summary: Редактирование предложения
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Обновлено
+        '400':
+          description: Невалидные данные
+        '401':
+          description: Не авторизован
+        '403':
+          description: Принадлежит другому пользователю
+    # 5.3 Удаление
+    delete:
+      tags: [ offers ]
+      summary: Удаление предложения
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '204':
+          description: Удалено
+        '401':
+          description: Не авторизован
+        '403':
+          description: Принадлежит другому пользователю
+
+  /offers/{offerId}/comments:
+    # 5.6 Список комментариев
+    get:
+      tags: [ comments ]
+      summary: Список комментариев к предложению
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+    # 5.7 Добавление комментария
+    post:
+      tags: [ comments ]
+      summary: Добавление комментария
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createCommentDto'
+      responses:
+        '201':
+          description: Создано
+        '400':
+          description: Невалидные данные
+        '401':
+          description: Не авторизован
+
+  /offers/premium/{city}:
+    # 5.12 Премиальные предложения для города
+    get:
+      tags: [ offers ]
+      summary: Список премиальных предложений для города
+      parameters:
+        - name: city
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
+      responses:
+        '200':
+          description: Успешно (максимум 3 предложения)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+
+  /offers/favorites:
+    # 5.13 Список избранных предложений
+    get:
+      tags: [ offers ]
+      summary: Получение списка избранных предложений
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+        '401':
+          description: Не авторизован
+
+  # 5.14 Добавление/удаление в избранное
+  /offers/{offerId}/favorite:
+    post:
+      tags: [ offers ]
+      summary: Добавить предложение в избранное
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Добавлено в избранное
+        '401':
+          description: Не авторизован
+    delete:
+      tags: [ offers ]
+      summary: Удалить предложение из избранного
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Удалено из избранного
+        '401':
+          description: Не авторизован
+
+  # 5.8 Создание пользователя
+  /users:
+    post:
+      tags: [ users ]
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUserDto'
+      responses:
+        '201':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Невалидные данные
+        '409':
+          description: Такой пользователь уже существует
+
+  # 5.9 Вход
+  /users/login:
+    post:
+      tags: [ users ]
+      summary: Вход в закрытую часть приложения
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Токен авторизации
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Неверные данные
+
+  /users/me:
+    # 5.11 Проверка состояния пользователя
+    get:
+      tags: [ users ]
+      summary: Проверка состояния пользователя
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Информация о текущем пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Не авторизован
+
+  # Для файлов картинок
+  /img/{folder}/{filename}:
+    get:
+      tags: [ static ]
+      summary: Получение изображений
+      parameters:
+        - name: folder
+          in: path
+          required: true
+          description: Название папки
+          schema:
+            type: string
+            enum: [ avatars, photos ]
+        - name: filename
+          in: path
+          required: true
+          description: Имя файла с расширением
+          schema:
+            type: string
+            example: "john.jpg"
+      responses:
+        '200':
+          description: Успешно (возвращается файл изображения)
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Файл не найден
