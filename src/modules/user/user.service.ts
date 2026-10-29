@@ -17,11 +17,11 @@ export class UserService implements IUserService {
 
   public async create(dto: CreateUserDto, salt: string): Promise<UserDocument> {
     const userData = {
-      name: `${dto.firstname} ${dto.lastname}`.trim(),
+      name: dto.name,
       email: dto.email,
       photoUrl: dto.photoUrl,
       password: createSHA256(dto.password, salt),
-      type: asUserType('common'),
+      type: asUserType(dto.userType),
     };
 
     const result = await this.userModel.create(userData);
