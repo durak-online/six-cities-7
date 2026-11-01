@@ -4,10 +4,16 @@ import { Component } from './types/index.js';
 import { Container } from 'inversify';
 import { restModule } from './rest/rest.container.js';
 import { userModule } from './modules/user/index.js';
-import { offerModule } from './modules/offer/offer.container.js';
+import { offerModule } from './modules/offer/index.js';
+import { commentModule } from './modules/comment/index.js';
 
 const container = new Container();
-container.load(restModule, userModule, offerModule);
+container.load(
+  restModule,
+  userModule,
+  offerModule,
+  commentModule,
+);
 
 const application = container.get<RestApp>(Component.RestApp);
 await application.init();

@@ -8,6 +8,8 @@ export const Component = {
   IOfferService: Symbol.for('IOfferService'),
   OfferModel: Symbol.for('OfferModel'),
   IFileReader: Symbol.for('IFileReader'),
+  ICommentService: Symbol.for('ICommentService'),
+  CommentModel: Symbol.for('CommentModel'),
 
   ImportCommand: Symbol.for('ImportCommand'),
 } as const;
