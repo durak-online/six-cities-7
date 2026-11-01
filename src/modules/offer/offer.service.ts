@@ -2,8 +2,8 @@ import { inject, injectable } from 'inversify';
 import { Model, Types } from 'mongoose';
 import { IOfferService } from './offer-service.interface.js';
 import { RentalOfferDocument } from './offer.entity.js';
-import { CreateOfferDto } from './dto/create-offer.dto.js';
-import { Component } from '../../types/index.js';
+import { CreateOfferDto, UpdateOfferDto } from './dto/index.js';
+import { Component, TCity } from '../../types/index.js';
 import { ILogger } from '../../shared/logging/index.js';
 import { CommentDocument } from '../comment/index.js';
 
@@ -54,5 +54,49 @@ export class DefaultOfferService implements IOfferService {
       commentsCount,
       rating: Number(averageRating.toFixed(1)),
     }).exec();
+  }
+
+  public async updateById(id: string, dto: UpdateOfferDto, userId: string): Promise<RentalOfferDocument | null> {
+    const offer = await this.offerModel.findById(id);
+
+    if (!offer || offer.author.toString() !== userId) {
+      return null;
+    }
+
+    return this.offerModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
+
+  public async findAll(limit = 60): Promise<RentalOfferDocument[]> {
+    return this.offerModel
+      .find()
+      .sort({ publishDate: -1 })
+      .limit(limit)
+      .populate('author')
+      .exec();
+  }
+
+  public async findPremiumByCity(city: TCity): Promise<RentalOfferDocument[]> {
+    return this.offerModel
+      .find({ city, isPremium: true })
+      .sort({ publishDate: -1 })
+      .limit(3)
+      .populate('author')
+      .exec();
+  }
+
+  public async findFavorites(): Promise<RentalOfferDocument[]> {
+    // пока что так
+    return this.offerModel.find({ isFavorite: true }).populate('author').exec();
+  }
+
+  public async toggleFavorite(id: string): Promise<RentalOfferDocument | null> {
+    // пока что так
+    const offer = await this.offerModel.findById(id);
+    if (!offer) {
+      return null;
+    }
+
+    offer.isFavorite = !offer.isFavorite;
+    return offer.save();
   }
 }
