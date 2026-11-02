@@ -141,56 +141,56 @@ components:
         location:
           $ref: '#/components/schemas/location'
 
-      createOfferDto:
-        type: object
-        required: [ title, description, city, previewUrl, photoUrls, isPremium, housingType, roomsCount, guestsCount, price, amenities, location ]
-        properties:
-          title:
-            type: string
-            minLength: 10
-            maxLength: 100
-          description:
-            type: string
-            minLength: 20
-            maxLength: 1024
-          city:
-            type: string
-            enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
-          previewUrl:
-            type: string
-          photoUrls:
-            type: array
-            items:
-              type: string
-            minItems: 6
-            maxItems: 6
-          isPremium:
-            type: boolean
-          housingType:
-            type: string
-            enum: [ apartment, house, room, hotel ]
-          roomsCount:
-            type: integer
-            minimum: 1
-            maximum: 8
-          guestsCount:
-            type: integer
-            minimum: 1
-            maximum: 10
-          price:
-            type: integer
-            minimum: 100
-            maximum: 100000
-          amenities:
-            type: array
-            items:
-              type: string
-              enum: [ Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge ]
-          location:
-            $ref: '#/components/schemas/location'
     createOfferDto:
       type: object
       required: [ title, description, city, previewUrl, photoUrls, isPremium, housingType, roomsCount, guestsCount, price, amenities, location ]
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        city:
+          type: string
+          enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
+        previewUrl:
+          type: string
+        photoUrls:
+          type: array
+          items:
+            type: string
+          minItems: 6
+          maxItems: 6
+        isPremium:
+          type: boolean
+        housingType:
+          type: string
+          enum: [ apartment, house, room, hotel ]
+        roomsCount:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guestsCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+        price:
+          type: integer
+          minimum: 100
+          maximum: 100000
+        amenities:
+          type: array
+          items:
+            type: string
+            enum: [ Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge ]
+        location:
+          $ref: '#/components/schemas/location'
+
+    updateOfferDto:
+      type: object
       properties:
         title:
           type: string
@@ -331,6 +331,12 @@ paths:
       summary: Редактирование предложения
       security:
         - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOfferDto'
       responses:
         '200':
           description: Обновлено

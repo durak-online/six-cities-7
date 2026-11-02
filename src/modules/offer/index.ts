@@ -1,4 +1,4 @@
-export * from './dto/create-offer.dto.js';
+export * from './dto/index.js';
 export * from './offer.entity.js';
 export * from './offer-service.interface.js';
 export * from './offer.service.js';

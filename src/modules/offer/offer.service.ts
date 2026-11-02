@@ -6,9 +6,10 @@ import { CreateOfferDto, UpdateOfferDto } from './dto/index.js';
 import { Component, TCity } from '../../types/index.js';
 import { ILogger } from '../../shared/logging/index.js';
 import { CommentDocument } from '../comment/index.js';
+import { ForbiddenError, NotFoundError } from '../../shared/errors/index.js';
 
 @injectable()
-export class DefaultOfferService implements IOfferService {
+export class OfferService implements IOfferService {
   constructor(
     @inject(Component.ILogger) private readonly logger: ILogger,
     @inject(Component.OfferModel) private readonly offerModel: Model<RentalOfferDocument>,
@@ -32,11 +33,27 @@ export class DefaultOfferService implements IOfferService {
     return result;
   }
 
-  public async findById(id: string): Promise<RentalOfferDocument | null> {
-    return this.offerModel.findById(id).populate('author').exec();
+  public async findById(id: string): Promise<RentalOfferDocument> {
+    const offer = await this.offerModel.findById(id).populate('author').exec();
+
+    if (!offer) {
+      throw new NotFoundError(`Offer with id ${id} not found`);
+    }
+
+    return offer;
   }
 
-  public async deleteById(id: string): Promise<void> {
+  public async deleteById(id: string, userId: string): Promise<void> {
+    const offer = await this.offerModel.findById(id);
+
+    if (!offer) {
+      throw new NotFoundError(`Offer with id ${id} not found`);
+    }
+
+    if (offer.author.toString() !== userId) {
+      throw new ForbiddenError('You do not have permission to delete this offer');
+    }
+
     await this.commentModel.deleteMany({ offerId: new Types.ObjectId(id) });
     await this.offerModel.findByIdAndDelete(id).exec();
     this.logger.info(`Offer and its comments deleted: ${id}`);
@@ -56,14 +73,26 @@ export class DefaultOfferService implements IOfferService {
     }).exec();
   }
 
-  public async updateById(id: string, dto: UpdateOfferDto, userId: string): Promise<RentalOfferDocument | null> {
+  public async updateById(id: string, dto: UpdateOfferDto, userId: string): Promise<RentalOfferDocument> {
     const offer = await this.offerModel.findById(id);
 
-    if (!offer || offer.author.toString() !== userId) {
-      return null;
+    if (!offer) {
+      throw new NotFoundError(`Offer with id ${id} not found`);
+    }
+    if (offer.author.toString() !== userId) {
+      throw new ForbiddenError();
     }
 
-    return this.offerModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    const updatedOffer = await this.offerModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .populate('author')
+      .exec();
+
+    if (!updatedOffer) {
+      throw new NotFoundError(`Offer with id ${id} not found`);
+    }
+
+    return updatedOffer;
   }
 
   public async findAll(limit = 60): Promise<RentalOfferDocument[]> {
@@ -89,14 +118,14 @@ export class DefaultOfferService implements IOfferService {
     return this.offerModel.find({ isFavorite: true }).populate('author').exec();
   }
 
-  public async toggleFavorite(id: string): Promise<RentalOfferDocument | null> {
+  public async setFavorite(id: string, state: boolean): Promise<RentalOfferDocument> {
     // пока что так
     const offer = await this.offerModel.findById(id);
     if (!offer) {
-      return null;
+      throw new NotFoundError(`Offer with id ${id} not found`);
     }
 
-    offer.isFavorite = !offer.isFavorite;
+    offer.isFavorite = state;
     return offer.save();
   }
 }

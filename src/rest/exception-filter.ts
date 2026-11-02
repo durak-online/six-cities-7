@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ILogger } from '../shared/logging/index.js';
-import { HttpError } from './http-errors.js';
+import { HttpError } from '../shared/errors/index.js';
 import { StatusCodes } from 'http-status-codes';
 import { Component } from '../types/index.js';
 import { inject, injectable } from 'inversify';
