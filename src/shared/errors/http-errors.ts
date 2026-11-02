@@ -25,3 +25,15 @@ export class NotFoundError extends HttpError {
   }
 }
 
+export class ConflictError extends HttpError {
+  constructor(message = 'Conflict') {
+    super(StatusCodes.CONFLICT, message);
+  }
+}
+
+export class UnauthorizedError extends HttpError {
+  constructor(message = 'Unauthorized') {
+    super(StatusCodes.UNAUTHORIZED, message);
+  }
+}
+
