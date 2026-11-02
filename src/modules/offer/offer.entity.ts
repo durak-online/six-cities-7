@@ -1,9 +1,10 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types, PopulatedDoc } from 'mongoose';
 import { TRentalOffer } from '../../types/index.js';
 import { CITY_LOCATIONS, CONVENIENCES, HOUSING_TYPES } from '../../constants/index.js';
+import { UserDocument } from '../user/index.js';
 
 export interface RentalOfferDocument extends Omit<TRentalOffer, 'author'>, Document {
-  author: Types.ObjectId;
+  author: PopulatedDoc<UserDocument, Types.ObjectId>;
   createdAt: Date;
   updatedAt: Date;
 }

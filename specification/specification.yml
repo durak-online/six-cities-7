@@ -131,7 +131,7 @@ components:
           type: integer
           minimum: 100
           maximum: 100000
-        amenities:
+        conveniences:
           type: array
           items:
             type: string
@@ -184,7 +184,7 @@ components:
           type: integer
           minimum: 100
           maximum: 100000
-        amenities:
+        conveniences:
           type: array
           items:
             type: string
@@ -231,7 +231,7 @@ components:
           type: integer
           minimum: 100
           maximum: 100000
-        amenities:
+        conveniences:
           type: array
           items:
             type: string

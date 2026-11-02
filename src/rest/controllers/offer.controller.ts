@@ -6,6 +6,7 @@ import { CreateOfferDto, UpdateOfferDto } from '../../modules/offer/index.js';
 import { Component, TCity } from '../../types/index.js';
 import { plainToInstance } from 'class-transformer';
 import { BaseController } from './base-controller.js';
+import { mapOfferToResponse } from '../../modules/offer/dto/offer-response.dto.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -22,11 +23,12 @@ export class OfferController extends BaseController {
 
     router.get('/', asyncHandler(this.getMany.bind(this)));
     router.post('/', asyncHandler(this.create.bind(this)));
+    router.get('/favorites', asyncHandler(this.getFavorites.bind(this)));
+    router.get('/premium/:city', asyncHandler(this.getPremiumByCity.bind(this)));
+
     router.get('/:offerId', asyncHandler(this.getOne.bind(this)));
     router.patch('/:offerId', asyncHandler(this.updateOne.bind(this)));
     router.delete('/:offerId', asyncHandler(this.deleteOne.bind(this)));
-    router.get('/premium/:city', asyncHandler(this.getPremiumByCity.bind(this)));
-    router.get('/favorites', asyncHandler(this.getFavorites.bind(this)));
     router.post('/:offerId/favorite', asyncHandler(this.postFavorite.bind(this)));
     router.delete('/:offerId/favorite', asyncHandler(this.deleteFavorite.bind(this)));
 
@@ -39,7 +41,7 @@ export class OfferController extends BaseController {
   ): Promise<void> {
     const limit = req.query.limit ? Number(req.query.limit) : 60;
     const offers = await this.offerService.findAll(limit);
-    this.ok(res, offers);
+    this.ok(res, offers.map(mapOfferToResponse));
   }
 
   private async create(
@@ -52,7 +54,7 @@ export class OfferController extends BaseController {
     const mockAuthorId = '507f1f77bcf86cd799439011';
 
     const offer = await this.offerService.create(dto, mockAuthorId);
-    this.created(res, offer);
+    this.created(res, mapOfferToResponse(offer));
   }
 
   private async getOne(
@@ -60,7 +62,7 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const offer = await this.offerService.findById(req.params.offerId);
-    this.ok(res, offer);
+    this.ok(res, mapOfferToResponse(offer));
   }
 
   private async updateOne(
@@ -73,7 +75,7 @@ export class OfferController extends BaseController {
     const mockAuthorId = '507f1f77bcf86cd799439011';
 
     const offer = await this.offerService.updateById(req.params.offerId, dto, mockAuthorId);
-    this.ok(res, offer);
+    this.ok(res, mapOfferToResponse(offer));
   }
 
   private async deleteOne(
@@ -93,7 +95,7 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const offers = await this.offerService.findPremiumByCity(req.params.city);
-    this.ok(res, offers);
+    this.ok(res, offers.map(mapOfferToResponse));
   }
 
   private async getFavorites(
@@ -101,7 +103,7 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const offers = await this.offerService.findFavorites();
-    this.ok(res, offers);
+    this.ok(res, offers.map(mapOfferToResponse));
   }
 
   private async postFavorite(
@@ -109,7 +111,7 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const offer = await this.offerService.setFavorite(req.params.offerId, true);
-    this.ok(res, offer);
+    this.ok(res, mapOfferToResponse(offer));
   }
 
   private async deleteFavorite(
@@ -117,6 +119,6 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const offer = await this.offerService.setFavorite(req.params.offerId, false);
-    this.ok(res, offer);
+    this.ok(res, mapOfferToResponse(offer));
   }
 }

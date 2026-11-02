@@ -6,7 +6,7 @@ import { CreateOfferDto, UpdateOfferDto } from './dto/index.js';
 import { Component, TCity } from '../../types/index.js';
 import { ILogger } from '../../shared/logging/index.js';
 import { CommentDocument } from '../comment/index.js';
-import { ForbiddenError, NotFoundError } from '../../shared/errors/index.js';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../../shared/errors/index.js';
 
 @injectable()
 export class OfferService implements IOfferService {
@@ -28,12 +28,17 @@ export class OfferService implements IOfferService {
     };
 
     const result = await this.offerModel.create(offerData);
+    await result.populate('author');
     this.logger.info(`New offer created: ${result.title} (${result.city})`);
 
     return result;
   }
 
   public async findById(id: string): Promise<RentalOfferDocument> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestError(`Offer id ${id} is not valid`);
+    }
+
     const offer = await this.offerModel.findById(id).populate('author').exec();
 
     if (!offer) {
@@ -44,6 +49,13 @@ export class OfferService implements IOfferService {
   }
 
   public async deleteById(id: string, userId: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestError(`Offer id ${id} is not valid`);
+    }
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestError(`User id ${userId} is not valid`);
+    }
+
     const offer = await this.offerModel.findById(id);
 
     if (!offer) {
@@ -74,17 +86,29 @@ export class OfferService implements IOfferService {
   }
 
   public async updateById(id: string, dto: UpdateOfferDto, userId: string): Promise<RentalOfferDocument> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestError(`Offer id ${id} is not valid`);
+    }
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestError(`User id ${userId} is not valid`);
+    }
+
     const offer = await this.offerModel.findById(id);
 
     if (!offer) {
       throw new NotFoundError(`Offer with id ${id} not found`);
     }
-    if (offer.author.toString() !== userId) {
-      throw new ForbiddenError();
+
+    const authorId = offer.author instanceof Types.ObjectId
+      ? offer.author.toString()
+      : offer.author._id.toString();
+
+    if (authorId !== userId) {
+      throw new ForbiddenError('You do not have permission to edit this offer');
     }
 
     const updatedOffer = await this.offerModel
-      .findByIdAndUpdate(id, dto, { new: true })
+      .findByIdAndUpdate(id, dto, { returnDocument: 'after' })
       .populate('author')
       .exec();
 
@@ -119,13 +143,24 @@ export class OfferService implements IOfferService {
   }
 
   public async setFavorite(id: string, state: boolean): Promise<RentalOfferDocument> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestError(`Offer id ${id} is not valid`);
+    }
+
     // пока что так
-    const offer = await this.offerModel.findById(id);
+    const offer = await this.offerModel
+      .findByIdAndUpdate(
+        id,
+        { isFavorite: state },
+        { returnDocument: 'after' }
+      )
+      .populate('author')
+      .exec();
+
     if (!offer) {
       throw new NotFoundError(`Offer with id ${id} not found`);
     }
 
-    offer.isFavorite = state;
-    return offer.save();
+    return offer;
   }
 }
