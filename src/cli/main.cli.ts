@@ -4,13 +4,14 @@ import { ICommand, GenerateCommand, HelpCommand, ImportCommand, VersionCommand }
 import { CLIApp } from './cli-app.js';
 import { Container } from 'inversify';
 import { userModule } from '../modules/user/index.js';
-import { offerModule } from '../modules/offer/offer.container.js';
+import { offerModule } from '../modules/offer/index.js';
 import { Component } from '../types/index.js';
 import { cliModule } from './cli.container.js';
+import { commentModule } from '../modules/comment/index.js';
 
 const container = new Container();
 
-container.load(userModule, offerModule, cliModule);
+container.load(userModule, offerModule, commentModule, cliModule);
 
 const importCommand = container.get<ImportCommand>(Component.ImportCommand);
 

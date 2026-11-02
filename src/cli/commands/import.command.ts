@@ -8,7 +8,7 @@ import { ILogger } from '../../shared/logging/index.js';
 import { IDatabaseClient } from '../../shared/database/index.js';
 import { IFileReader } from '../../shared/file-readers/file-reader.interface.js';
 import { IUserService } from '../../modules/user/index.js';
-import { IOfferService } from '../../modules/offer/offer-service.interface.js';
+import { IOfferService } from '../../modules/offer/index.js';
 import { IConfig, RestSchema } from '../../config/index.js';
 import { getMongoURI } from '../../shared/utils/index.js';
 
@@ -72,14 +72,14 @@ export class ImportCommand implements ICommand {
       let importedCount = 0;
 
       for await (const offer of this.reader.read(filename)) {
-        const [firstname, lastname] = offer.author.name.split(' ');
+        const name = offer.author.name;
         const user = await this.userService.findOrCreate(
           {
             email: offer.author.email,
             photoUrl: offer.author.photoUrl || 'default-avatar.jpg',
-            firstname: firstname || 'Unknown',
-            lastname: lastname || 'User',
+            name: name || 'Unknown',
             password: '123456',
+            userType: 'common',
           },
           salt
         );
