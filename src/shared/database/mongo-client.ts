@@ -17,6 +17,7 @@ export class MongoDatabaseClient implements IDatabaseClient {
     @inject(Component.ILogger) private readonly logger: ILogger
   ) {
     this._isConnected = false;
+    this.logger = logger.child(this.constructor.name);
   }
 
   public isConnected() {
@@ -28,7 +29,7 @@ export class MongoDatabaseClient implements IDatabaseClient {
       throw new Error('MongoDB client already connected');
     }
 
-    this.logger.info('Trying to connect to MongoDB…');
+    this.logger.info('Trying to connect to MongoDB...');
 
     let attempt = 0;
     while (attempt < RETRY_COUNT) {

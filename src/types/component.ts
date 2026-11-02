@@ -10,6 +10,8 @@ export const Component = {
   IFileReader: Symbol.for('IFileReader'),
   ICommentService: Symbol.for('ICommentService'),
   CommentModel: Symbol.for('CommentModel'),
+  ExceptionFilter: Symbol.for('ExceptionFilter'),
+  Controller: Symbol.for('Controller'),
 
   ImportCommand: Symbol.for('ImportCommand'),
 } as const;
