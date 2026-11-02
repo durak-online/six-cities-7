@@ -1,6 +1,5 @@
 import { RentalOfferDocument } from '../offer.entity.js';
-import { UserDocument } from '../../user/index.js';
-import { Types } from 'mongoose';
+import { isPopulatedUser } from '../../../shared/utils/index.js';
 
 export type OfferResponseDto = {
   id: string;
@@ -28,10 +27,6 @@ export type OfferResponseDto = {
     userType: string;
   };
 };
-
-function isPopulatedUser(user: Types.ObjectId | UserDocument): user is UserDocument {
-  return typeof user === 'object' && user !== null && 'email' in user;
-}
 
 export function mapOfferToResponse(offer: RentalOfferDocument): OfferResponseDto {
   const author = offer.author;
