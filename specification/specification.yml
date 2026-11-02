@@ -4,6 +4,9 @@ info:
   description: "API для 'Шесть городов'"
   version: "1.0.0"
 
+servers:
+  - url: http://localhost:8080
+
 tags:
   - name: offers
     description: Предложения по аренде
@@ -268,6 +271,16 @@ components:
           minimum: 1
           maximum: 5
 
+  parameters:
+    OfferIdParam:
+      name: offerId
+      in: path
+      required: true
+      description: ID предложения
+      schema:
+        type: string
+        example: "60d0fe4f5311236168a109ca"
+
 paths:
   /offers:
     # 5.4 Получение предложений
@@ -318,6 +331,8 @@ paths:
     get:
       tags: [ offers ]
       summary: Детальная информация по предложению
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       responses:
         '200':
           description: Успешно
@@ -329,6 +344,8 @@ paths:
     patch:
       tags: [ offers ]
       summary: Редактирование предложения
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       security:
         - bearerAuth: [ ]
       requestBody:
@@ -350,6 +367,8 @@ paths:
     delete:
       tags: [ offers ]
       summary: Удаление предложения
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       security:
         - bearerAuth: [ ]
       responses:
@@ -365,6 +384,8 @@ paths:
     get:
       tags: [ comments ]
       summary: Список комментариев к предложению
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       responses:
         '200':
           description: Успешно
@@ -378,6 +399,8 @@ paths:
     post:
       tags: [ comments ]
       summary: Добавление комментария
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       security:
         - bearerAuth: [ ]
       requestBody:
@@ -440,6 +463,8 @@ paths:
     post:
       tags: [ offers ]
       summary: Добавить предложение в избранное
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       security:
         - bearerAuth: [ ]
       responses:
@@ -450,6 +475,8 @@ paths:
     delete:
       tags: [ offers ]
       summary: Удалить предложение из избранного
+      parameters:
+        - $ref: '#/components/parameters/OfferIdParam'
       security:
         - bearerAuth: [ ]
       responses:

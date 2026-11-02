@@ -40,7 +40,7 @@ export class TSVWriter implements IFileWriter<TRentalOffer> {
       String(offer.guestsCount),
       String(offer.price),
       offer.conveniences.join(TSV_LIST_SEPARATOR),
-      offer.author.email,
+      JSON.stringify(offer.author),
       String(offer.commentsCount),
       `${offer.location.latitude}${TSV_LIST_SEPARATOR}${offer.location.longitude}`,
     ].join('\t');

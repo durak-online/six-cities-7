@@ -5,7 +5,7 @@ import {
   TLocation,
   asCity,
   asConvenience,
-  asHousingType,
+  asHousingType, TUser,
 } from '../../types/index.js';
 import {
   asBoolean,
@@ -53,7 +53,7 @@ export class TSVReader implements IFileReader<TRentalOffer> {
     const [
       titleRaw, descriptionRaw, publishDateRaw, cityRaw, previewUrl, photoUrlsRaw,
       isPremiumRaw, isFavoriteRaw, ratingRaw, housingTypeRaw, roomsCountRaw,
-      guestsCountRaw, priceRaw, conveniencesRaw, authorEmail,
+      guestsCountRaw, priceRaw, conveniencesRaw, authorRaw,
       commentsCountRaw, locationRaw,
     ] = parts;
 
@@ -73,14 +73,7 @@ export class TSVReader implements IFileReader<TRentalOffer> {
         guestsCount: asIntInRange(guestsCountRaw, GUESTS_COUNT_RANGE.min, GUESTS_COUNT_RANGE.max),
         price: asIntInRange(priceRaw, PRICE_RANGE.min, PRICE_RANGE.max),
         conveniences: this.parseConveniences(conveniencesRaw),
-        // TODO: искать реального юзера вместо заглушки
-        author: {
-          email: authorEmail,
-          name: 'John Doe',
-          type: 'common',
-          password: 'qwerty123',
-          photoUrl: '/userphotos/1',
-        },
+        author: this.parseAuthor(authorRaw),
         commentsCount: asIntInRange(commentsCountRaw, 0, Number.MAX_SAFE_INTEGER),
         location: this.parseLocation(locationRaw),
       };
@@ -120,5 +113,13 @@ export class TSVReader implements IFileReader<TRentalOffer> {
     }
 
     return { latitude, longitude };
+  }
+
+  private parseAuthor(raw: string): TUser {
+    try {
+      return JSON.parse(raw) as TUser;
+    } catch {
+      throw new Error(`Invalid author JSON: "${raw}"`);
+    }
   }
 }

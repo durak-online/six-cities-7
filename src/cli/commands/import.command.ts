@@ -78,8 +78,8 @@ export class ImportCommand implements ICommand {
             email: offer.author.email,
             photoUrl: offer.author.photoUrl || 'default-avatar.jpg',
             name: name || 'Unknown',
-            password: '123456',
-            userType: 'common',
+            password: offer.author.password || '123456',
+            userType: offer.author.type || 'common',
           },
           salt
         );
